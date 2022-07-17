@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import repository.CategoryProductRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ProductCategoryService {
     private final CategoryProductRepository categoryProductRepository;
@@ -20,19 +19,20 @@ public class ProductCategoryService {
         return categoryProductRepository.findAll();
     }
 
-    public Optional<CategoryProduct> findProdById(Long id){
-        return categoryProductRepository.findById(id);
-    }
 
-    public CategoryProduct addProduct(CategoryProduct categoryProduct){
+    public CategoryProduct findProdCatById(Long id) throws Exception{
+        return categoryProductRepository.findProductCategoryById(id)
+                .orElseThrow(() -> new Exception("product Category by id " + id + " was not found"));
+    }
+    public CategoryProduct addCat(CategoryProduct categoryProduct){
         return categoryProductRepository.save(categoryProduct);
     }
 
-    public CategoryProduct editProduct(CategoryProduct categoryProduct){
+    public CategoryProduct editCat(CategoryProduct categoryProduct){
         return  categoryProductRepository.save(categoryProduct);
     }
 
-    public void deleteProduct(Long id){
+    public void deleteCat(Long id){
         categoryProductRepository.deleteById(id);
     }
 }

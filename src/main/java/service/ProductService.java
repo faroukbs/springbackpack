@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import repository.ProductRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -20,8 +19,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product findProdById(Long id){
-        return productRepository.findOne(id);
+    public Product findProdById(Long id) throws Exception{
+        return productRepository.findProductById(id)
+                .orElseThrow(() -> new Exception("product by id " + id + " was not found"));
     }
 
     public Product addProduct(Product product){
@@ -32,7 +32,7 @@ public class ProductService {
         return  productRepository.save(product);
     }
 
-    public void deleteProduct(Long id){
+    public void removeProduct(Long id){
         productRepository.deleteById(id);
     }
 }

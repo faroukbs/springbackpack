@@ -1,6 +1,8 @@
 package controllers;
 
 import models.Product;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.ProductService;
 
@@ -8,26 +10,40 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
     @GetMapping("/products")
-    public List<Product> getProducts(){
+    public List<Product> getProducts() {
         return productService.findAllProduct();
     }
 
     @PostMapping("/addproduct")
-    public Product newProduct (@RequestBody Product product){
+    public Product newProduct(@RequestBody Product product) {
         return productService.addProduct(product);
     }
-    @PostMapping("/edit/{id}")
-    public Product updateProduct (@PathVariable Long id,@RequestBody Product product){
-        Product prod = productService.findProdById(id);
-        return prod;
+
+    @PutMapping("/updateproduct")
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        Product updateProduct = productService.editProduct(product);
+        return new ResponseEntity<>(updateProduct, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteproduct/{id}")
+    public ResponseEntity<?> deleteproduct(@PathVariable("id") Long id) {
+        productService.removeProduct(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/findproduct/{id}")
+    public ResponseEntity<Product> getEmployeeById(@PathVariable("id") Long id) throws Exception {
+        Product product = productService.findProdById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
 }
